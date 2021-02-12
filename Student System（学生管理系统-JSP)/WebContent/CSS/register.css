@@ -1,0 +1,22 @@
+@charset "UTF-8";
+body{
+	background-image:url("569a00c06ba5ddd5aa4be1d9403abaa0.jpeg");
+}
+
+form{
+	margin:auto;
+	margin-top:160px;
+	text-align:center;
+	font-size:30px;
+	border-style:groove;
+	width:350px;
+	height:350px;
+	border-color: #0080ff;
+	border-radius:30px;
+	text-shadow:5px 5px 5px #0080ff;
+}
+
+button{
+	
+	margin-left:0px;
+}
