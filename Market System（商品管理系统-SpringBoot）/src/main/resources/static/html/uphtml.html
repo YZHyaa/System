@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="application/javascript" src="/JS/jquery-3.3.1.min .js"></script>
+    <meta charset="UTF-8">
+    <title>uphtml</title>
+</head>
+<body>
+    <h4>请选择要上传的图片:</h4>
+    <input type="file" name="file" id = "input_file" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" ><br>
+    <h4>请输入上传的菜名：</h4>
+    <input type="text" id="input_name"><br><br>
+    <button id="up_btn">上传</button>
+
+    <script>
+        $("#up_btn").click(function () {
+            alert("yes");
+            var file = $("#input_file").get(0).files[0];
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("goodsName",$("#input_name").val());
+
+            $.ajax({
+                type:"POST",
+                //url:"http://xuptyzh.goho.co:30303/goods/doImg",
+                url:"http://39.105.136.112:8080/goods/doImg",
+                contentType:false,
+                processData: false,
+                data:formData,
+                success:function(data){
+                    var data = JSON.parse(data);
+                    console.log("请求成功之后，调用接口返回的数据");
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

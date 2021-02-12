@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.aftersale.AftersaleDao">
+
+    <resultMap id="aftersaleMap" type="com.llxs.backend.entity.aftersale.Aftersale">
+        <result property="orderId" column="order_id"/>
+        <result property="questType" column="quest_type"/>
+        <result property="questDesc" column="quest_desc"/>
+        <result property="questImgs" column="quest_imgs"/>
+        <association property="order" javaType="com.llxs.backend.entity.order.Order">
+            <result property="orderPrice" column="order_Price"/>
+            <result property="orderAddress" column="order_Address"/>
+            <result property="orderUserName" column="order_UserName"/>
+            <result property="orderDate" column="order_Date"/>
+        </association>
+        <collection property="orderDetails" ofType="com.llxs.backend.entity.order.OrderDetail">
+            <result property="detailNum" column="detail_Num"/>
+            <result property="detailPrice" column="detail_Price"/>
+            <association property="goods" javaType="com.llxs.backend.entity.goods.Goods">
+                <result property="goodsName" column="goods_Name"/>
+                <result property="goodsImg" column="goods_Img"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="queryAftersale" resultMap="aftersaleMap">
+        select a.order_id,quest_desc,quest_imgs,quest_type,
+                order_Price,order_Address,order_UserName,order_Date,
+                detail_Price,detail_Num,
+                goods_Img,g.goods_Name
+        from after_sale a left join `order` on `order`.order_Id = a.order_id
+              left join order_detail o on `order`.order_Id = o.detail_Order
+              left join goods g on o.detail_Goods = g.goods_Id
+    </select>
+
+    <select id="queryAftersaleById" resultMap="aftersaleMap">
+        select  a.order_id,quest_desc,quest_imgs,quest_type,
+                order_Price,order_Address,order_UserName,order_Date,
+                detail_Price,detail_Num,
+                goods_Img,g.goods_Name
+        from after_sale a left join `order` on `order`.order_Id = a.order_id
+              left join order_detail o on `order`.order_Id = o.detail_Order
+              left join goods g on o.detail_Goods = g.goods_Id
+        where a.order_id=#{orderId}
+    </select>
+
+</mapper>

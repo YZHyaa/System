@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.admin.AdminDao">
+
+    <resultMap id="adminMap" type="com.llxs.backend.entity.admin.Admin">
+        <id property="adminId" column="admin_Id"/>
+        <result property="adminName" column="admin_Name"/>
+        <result property="adminDate" column="admin_Date"/>
+        <result property="adminRole" column="admin_Role"/>
+        <result property="adminState" column="admin_State"/>
+    </resultMap>
+
+    <select id="queryAdmins" resultMap="adminMap">
+       SELECT * FROM admins
+    </select>
+
+</mapper>

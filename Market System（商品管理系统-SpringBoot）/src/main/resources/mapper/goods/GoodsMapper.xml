@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.goods.GoodsDao">
+    
+    <resultMap id="goodsMap" type="com.llxs.backend.entity.goods.Goods">
+        <id property="goodsId" column="goods_Id"/>
+        <result property="goodsName" column="goods_Name"/>
+        <result property="goodsPrice" column="goods_Price"/>
+        <result property="goodsNum" column="goods_Num"/>
+        <result property="goodsType" column="goods_Type"/>
+        <result property="goodsImg" column="goods_Img"/>
+        <result property="goodsState" column="goods_State"/>
+        <result property="goodsDesc" column="goods_Desc"/>
+        <result property="goodsVolume" column="goods_volume"/>
+    </resultMap>
+    
+    <insert id="insertGoods" parameterType="com.llxs.backend.entity.goods.Goods">
+        insert into goods(goods_Name, goods_Price, goods_Num, goods_Type, goods_Img, goods_Desc)
+                    values(#{goodsName},#{goodsPrice},#{goodsNum},
+                            #{goodsType},#{goodsImg},#{goodsDesc})
+    </insert>
+
+    <insert id="insertGoodsImg">
+        insert into goods(goods_Img) values #{goodsImg} where goodsId=#{goodsId}
+    </insert>
+
+    <update id="updateGoods" parameterType="com.llxs.backend.entity.goods.Goods">
+        update goods
+        <set>
+            <if test="goodsName != null"/>
+                goods_Name=#{goodsName},
+            <if test="goodsPrice != null"/>
+              goods_Price=#{goodsPrice},
+            <if test="goodsNum != null "/>
+              goods_Num=#{goodsNum},
+            <if test="goodsType != null"/>
+              goods_Type=#{goodsType},
+            <if test="goodsImg != null "/>
+              goods_Img=#{goodsImg},
+            <if test="goodsDesc != null and goodsDesc !=''"/>
+              goods_Desc=#{goodsDesc}
+        </set>
+        where goods_Id=#{goodsId}
+    </update>
+
+    <update id="updateGoodsState" >
+        update goods set goods_State=-1 where goods_Id in
+            <foreach item="goodsId" collection="list" open="(" separator="," close=")">
+                      #{goodsId}
+             </foreach>
+    </update>
+    <update id="updateGoodsStateById">
+        update goods set goods_State=-1 where goods_Id=#{goodsId}
+    </update>
+
+    <update id="updateGoodsImg">
+        update goods set goods_Img=#{goodsImg} where goods_Id=#{goodsId}
+    </update>
+
+    <delete id="deleteGoodsById">
+        delete from goods where goods_Id=#{goodsId}
+    </delete>
+
+    <delete id="deleteGoods">
+        delete from goods where goods_Id in
+          <foreach collection="list" item="goodsId" open="(" separator="," close=")">
+                  #{goodsId}
+          </foreach>
+    </delete>
+
+    <select id="queryGoodsByState" resultMap="goodsMap">
+        SELECT * FROM goods where goods_State=#{state}
+    </select>
+
+    <select id="queryGoodsByType" resultMap="goodsMap">
+        select * from goods  where goods_Type=#{typeId}
+    </select>
+
+    <select id="queryGoodsById" resultMap="goodsMap">
+        select * from goods where goods_Id=#{goodsId}
+    </select>
+
+    <select id="queryGoodsIdByName" resultType="java.lang.Integer">
+        select goods_Id from goods where goods_Name=#{name}
+    </select>
+
+    <select id="querySortGoods" resultMap="goodsMap">
+        select * from goods order by goods_volume desc
+    </select>
+
+</mapper>
