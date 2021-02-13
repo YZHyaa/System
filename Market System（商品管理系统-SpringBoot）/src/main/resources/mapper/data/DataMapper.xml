@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.data.DataDao">
+
+    <select id="queryOrderData" resultType="com.llxs.backend.entity.data.Data">
+         SELECT order_Date as theDate, COUNT(*) as dataNum FROM `order`
+              where order_Date between #{startTime} and #{endTime}
+              GROUP BY DAY(order_Date)
+    </select>
+
+    <select id="queryMoneyData" resultType="com.llxs.backend.entity.data.Data">
+           SELECT order_Date as theDate, SUM(order_Price)  as dataNum FROM `order`
+                where order_Date between #{startTime} and #{endTime}
+                GROUP BY DAY(order_Date)
+    </select>
+</mapper>

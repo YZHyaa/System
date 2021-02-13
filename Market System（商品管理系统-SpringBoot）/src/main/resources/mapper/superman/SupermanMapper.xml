@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.superman.SupermanDao">
+
+    <resultMap id="supermanMap" type="com.llxs.backend.entity.superman.Superman">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+
+
+    <select id="query" parameterType="com.llxs.backend.entity.superman.Superman" resultType="java.lang.Integer">
+        select id from superman where username=#{username} and password=#{password}
+    </select>
+    <select id="queryExist" resultType="java.lang.Integer">
+        select id from superman where username=#{username}
+    </select>
+
+
+</mapper>

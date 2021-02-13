@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.order.OrderDao">
+
+    <resultMap id="orderMap" type="com.llxs.backend.entity.order.Order">
+        <id property="orderId" column="order_Id"/>
+        <result property="orderAddress" column="order_Address"/>
+        <result property="orderDate" column="order_Date"/>
+        <result property="orderPrice" column="order_Price"/>
+        <result property="orderState" column="order_State"/>
+        <result property="orderUserName" column="order_UserName"/>
+        <result property="orderPhone" column="order_Phone"/>
+        <!--<collection property="orderDetails" ofType="com.llxs.backend.entity.order.OrderDetail">-->
+            <!--<result property="detailNum" column="detail_Num"/>-->
+            <!--<result property="detailPrice" column="detail_Price"/>-->
+            <!--<association property="goods" javaType="com.llxs.backend.entity.goods.Goods">-->
+                <!--<result property="goodsName" column="goods_Name"/>-->
+                <!--<result property="goodsImg" column="goods_Img"/>-->
+            <!--</association>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+        <collection property="orderDetails" column="order_Id" ofType="com.llxs.backend.entity.order.OrderDetail" javaType="java.util.ArrayList" select="getDetail">
+        </collection>
+    </resultMap>
+
+    <resultMap id="detailMap" type="com.llxs.backend.entity.order.OrderDetail">
+        <id  property="detailOrder" column="detail_Order"/>
+        <result property="detailNum" column="detail_Num"/>
+        <result property="detailPrice" column="detail_Price"/>
+            <association property="goods" javaType="com.llxs.backend.entity.goods.Goods">
+                <result property="goodsName" column="goods_Name"/>
+                <result property="goodsImg" column="goods_Img"/>
+            </association>
+    </resultMap>
+
+    <select id="getDetail" parameterType="java.lang.String" resultMap="detailMap">
+        select detail_Order,detail_Num,detail_Price,
+                goods_Name,goods_Img
+          from order_detail left join goods g on order_detail.detail_Goods = g.goods_Id
+          where detail_Order = #{order_Id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryOrders" resultMap="orderMap">
+        select
+          order_Id,order_Address,order_Date,order_Price,order_State,order_UserName,order_Phone
+        from `order`
+    </select>
+
+    <select id="queryOrdersByState" resultMap="orderMap">
+        select
+          order_Id,order_Address,order_Date,order_Price,order_State,order_UserName,order_Phone,
+          detail_Num,detail_Price,
+          goods_Name,goods_Img
+        from `order` left join order_detail o on `order`.order_Id = o.detail_Order
+              left join goods g on o.detail_Goods = g.goods_Id
+        where order_State=#{state}
+    </select>
+
+    <select id="querySearchOrders" resultMap="orderMap">
+        select
+          order_Id,order_Address,order_Date,order_Price,order_State,order_UserName,order_Phone
+        from `order`
+    </select>
+
+    <select id="queryOrderById" resultMap="orderMap">
+        select
+          order_Id,order_Address,order_Date,order_Price,order_State,order_UserName,order_Phone,
+          detail_Num,detail_Price,
+          goods_Name,goods_Img
+        from `order` left join order_detail o on `order`.order_Id = o.detail_Order
+              left join goods g on o.detail_Goods = g.goods_Id
+        where order_Id=#{orderId}
+    </select>
+
+    <select id="queryOrderBydate" resultMap="orderMap">
+        select
+          order_Id,order_Address,order_Date,order_Price,order_State,order_UserName,order_Phone,
+          detail_Num,detail_Price,
+          goods_Name,goods_Img
+        from `order` left join order_detail o on `order`.order_Id = o.detail_Order
+              left join goods g on o.detail_Goods = g.goods_Id
+        where order_Date between #{startTime} and #{endTime}
+    </select>
+
+    <update id="updateOrders">
+        update `order` set order_State=#{state} where orderId=#{orderId}
+    </update>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llxs.backend.dao.goods.GoodsDetailDao">
+
+    <resultMap id="GoodsDetailMap" type="com.llxs.backend.entity.goods.GoodsDetail">
+        <id property="goodId" column="good_id"/>
+        <result property="goodArea" column="good_area"/>
+        <result property="goodContent" column="good_content"/>
+        <result property="goodDate" column="good_date"/>
+        <result property="goodKeep" column="good_keep"/>
+    </resultMap>
+
+    <insert id="insertGoodsDetail" parameterType="com.llxs.backend.entity.goods.GoodsDetail">
+        insert into goods_detail(
+        good_id,
+        <if test="goodArea != ''"/>
+        good_area,
+        good_content, good_date, good_keep)
+         values (
+        #{goodId},
+        <if test="goodArea != ''"/>
+        #{goodArea},
+        #{goodContent},#{goodDate},#{goodKeep})
+    </insert>
+
+    <update id="updateGoodsDetail" parameterType="com.llxs.backend.entity.goods.GoodsDetail">
+        update goods_detail
+        <set>
+            <if test="goodArea != null"/>
+              good_area=#{goodArea},
+            <if test="goodContent != null"/>
+              good_content=#{goodContent},
+            <if test="goodDate != null"/>
+              good_date=#{goodDate},
+            <if test="goodKeep != null"/>
+              good_keep=#{goodKeep}
+        </set>
+          where good_id=#{goodId}
+    </update>
+
+    <delete id="deleteGoodsDetailById">
+        delete from goods_detail where good_id=#{goodsId}
+    </delete>
+
+    <delete id="deleteGoodsDetail">
+        delete from goods_detail where good_id in
+        <foreach collection="list" item="goodId" open="(" separator="," close=")">
+            #{goodId}
+        </foreach>
+    </delete>
+
+    <select id="queryGoodsDetailById" resultMap="GoodsDetailMap">
+          select * from goods_detail where good_id=#{goodsId}
+    </select>
+
+</mapper>
