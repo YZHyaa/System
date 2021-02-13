@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezhao.mapper.UserMapper">
+
+	<select id="findUserId" parameterType="String" resultType="Integer">
+		SELECT u_id FROM USER WHERE u_name= #{_parameter}
+	</select>
+	
+	<insert id="insertUser" parameterType="String">
+		INSERT INTO USER(u_name) VALUES (#{_parameter})
+	</insert>
+	
+	<insert id="insertUserInfo" parameterType="Integer">
+		INSERT INTO information(u_id) VALUES (#{uId}) 
+	</insert>
+	
+	<select id="findUserInfo" parameterType="Integer" resultType="Info">
+		SELECT  info_id ,
+				info_name,
+     			info_gender,
+     			info_school,
+     			info_cid,
+     			info_profession,
+     			info_phone
+		FROM information 
+		WHERE u_id=#{uId}	
+	</select>
+	
+	<update id="updateUserInfo" parameterType="Info">
+		UPDATE information 
+		<set>
+		   <if test="infoName != null and infoName != ''"> 
+			 info_name=#{infoName},
+		   </if>	
+		   <if test="infoGender != null and infoGender != ''"> 
+			 info_gender=#{infoGender},
+		   </if>
+		   <if test="infoSchool != null and infoSchool != ''"> 
+			 info_school=#{infoSchool},
+		   </if>
+		   <if test="infoCid != null and infoCid != ''"> 
+			 info_cid=#{infoCid},
+		   </if>
+		   <if test="infoProfession != null and infoProfession != ''"> 
+			 info_profession=#{infoProfession},
+		   </if>
+		   <if test="infoPhone != null and infoPhone != ''"> 
+			 info_phone=#{infoPhone},
+		   </if> 
+		   <if test="uName != null and uName != ''"> 
+			 u_name=#{uName}
+		   </if> 
+    	</set>
+		WHERE u_id=#{uId}
+	</update>
+	
+	<insert id="insertUserResume" parameterType="Integer">
+		INSERT INTO RESUME(u_id) VALUES (#{uId})
+	</insert>
+	
+	<select id="findUserResume" parameterType="Integer" resultType="Resume">
+		SELECT res_name,
+			   res_profession,
+			   res_school,
+			   res_phone,
+			   res_address,
+			   res_introduce
+		FROM RESUME 
+		WHERE u_id=#{uId}
+	</select>
+	
+	<update id="updateUserResume" parameterType="Resume">
+		UPDATE RESUME 
+		<set>
+			<if test="resName != null and resName != ''">
+				res_name=#{resName},
+			</if>
+			<if test="resProfession != null and resProfession != ''">
+				res_profession=#{resProfession},
+			</if>
+			<if test="resSchool != null and resSchool != ''">
+				res_school=#{resSchool},
+			</if>
+			<if test="resPhone != null and resPhone != ''">
+				res_phone=#{resPhone},
+			</if>
+			<if test="resAddress != null and resAddress != ''">
+				res_address=#{resAddress},
+			</if>
+			<if test="resIntroduce != null and resIntroduce != ''">
+				res_introduce=#{resIntroduce}
+			</if>
+		</set>
+		WHERE u_id=#{uId};
+	</update>
+	
+	<select id="findUserById" parameterType="Integer" resultType="InfoOutline">
+    	SELECT info_id,
+    		   info_school,
+    		   info_profession,
+    		   u_name 
+        FROM information 
+        WHERE u_id IN
+        	<foreach collection="list" item="item" open="(" close=")" separator=",">
+    			#{item}
+    		</foreach>
+    </select>
+</mapper> 

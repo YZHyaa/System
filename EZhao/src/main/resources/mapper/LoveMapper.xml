@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezhao.mapper.LoveMapper">
+
+	<select id="insertCollection" parameterType="myCollection">
+		INSERT INTO collection(note_id,u_id) VALUES (#{noteId},#{uId})
+	</select>
+	
+	<delete id="deleteCollection" parameterType="myCollection">
+		DELETE FROM collection WHERE u_id=#{uId} AND note_id=#{noteId}
+	</delete>
+	
+	<select id="findCollectionList" parameterType="Integer" resultType="Integer">
+		SELECT note_id FROM collection WHERE u_id=#{uId}
+	</select>
+	
+	<select id="findCollectionCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM collection WHERE u_id=#{uId}
+	</select>
+	
+	<insert id="insertFollow" parameterType="Follow">
+		INSERT INTO follow(u_id,fans_id) VALUES (#{uId},#{fansId})
+	</insert>
+	
+	<delete id="deleteFollow" parameterType="Follow">
+		DELETE FROM follow WHERE u_id=#{uId} AND fans_id=#{fansId}
+	</delete>
+	
+	<select id="findFollowList" parameterType="Integer" resultType="Integer">
+		SELECT u_id FROM follow WHERE fans_id=#{fansId}
+	</select>
+	
+	<select id="findFollowCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM follow WHERE fans_id=#{fansId}
+	</select>
+	
+	<select id="findFansList" parameterType="Integer" resultType="Integer">
+		SELECT fans_id FROM follow WHERE u_id=#{uId}
+	</select>
+	
+	<select id="findFansCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM follow WHERE u_id=#{uId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezhao.mapper.NoteMapper">
+	<resultMap id="NoteResultMap" type="Note">
+		<result property="noteTitle" column="note_title"/>
+		<result property="noteContent" column="note_content"/>
+		<result property="noteDate" column="note_date"/>
+		<result property="labId" column="lab_id"/>
+		<result property="authorName" column="author_name"/>
+		<result property="picUrl" column="pic_url"/>
+		<collection property="comments" ofType="Comment">
+			<result property="comContent" column="com_content"/>
+			<result property="comDate" column="com_date"/>
+			<result property="authorName" column="author_name"/>
+			<collection property="replies" ofType="Reply">
+				<result property="repContent" column="rep_content"/>
+				<result property="repDate" column="rep_date"/>
+				<result property="authorName" column="author_name"/>
+			</collection>
+		</collection>
+	</resultMap>
+	
+
+	<insert id="insertNote" parameterType="Note">
+		INSERT INTO note(
+			note_title,
+			note_content,
+			lab_id,
+			note_date, 
+			author_id,
+			author_name,
+			pic_url
+			)VALUES(
+			#{noteTitle},
+			#{noteContent},
+			#{labId},
+		 	#{noteDate}, 
+			#{authorId},
+			#{authorName},
+			#{picUrl}
+			)
+	</insert>
+	
+	<insert id="insertComment" parameterType="Comment">
+		INSERT INTO COMMENT(
+		com_content,
+		com_date,
+		to_note_id,
+		author_name
+		) VALUES(
+		#{comContent},
+		#{comDate},
+		#{toNoteId},
+		#{authorName}
+	)
+	</insert>
+	
+	<insert id="insertReply" parameterType="Reply">
+		INSERT INTO reply(
+		rep_content,
+		rep_date,
+		author_name,
+		to_com_id
+		) VALUES (
+		#{repContent},
+		#{repDate},
+		#{authorName},
+		#{toComId}
+		)
+	</insert>
+	
+	<delete id="deleteNote" parameterType="Integer">
+		DELETE FROM note WHERE note_id=#{noteId}
+	</delete>
+	
+	<select id="findAllNotelList" resultType="NoteOutline">
+		SELECT note_id,note_title,note_date,lab_id 
+		FROM note
+	</select>
+	
+	<select id="findNoteListById" parameterType="Integer" resultType="NoteOutline">
+		SELECT note_id,note_title,note_date,lab_id 
+		FROM note
+		WHERE note_id IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+    			#{item}
+    	</foreach>
+	</select>
+	
+	<select id="findNoteListByUid" parameterType="Integer" resultType="NoteOutline">
+		SELECT note_id,note_title,note_date,lab_id 
+		FROM note 
+		WHERE author_id=#{authorId}
+	</select>
+	
+	<select id="findNoteListByLab" parameterType="Integer" resultType="NoteOutline">
+		SELECT note_id,note_title,note_date,lab_id 
+		FROM note 
+		WHERE lab_id=#{labId}
+	</select>
+	
+	<select id="findNoteListByTitle" parameterType="String" resultType="NoteOutline">
+		SELECT note_id,note_title,note_date,lab_id 
+		FROM note 
+		WHERE note_title LIKE CONCAT('%',#{_parameter},'%')
+		   OR note_content LIKE CONCAT('%',#{_parameter},'%')
+	</select>
+	
+	<select id="findNote" parameterType="Integer" resultMap="NoteResultMap">
+		SELECT 	note_title,
+				note_content,
+				lab_id,
+				note_date,
+				note.`author_name`,
+				pic_url,
+				com_content,
+				com_date,
+				comment.`author_name`,
+				rep_content,
+				rep_date,
+				reply.`author_name`
+		FROM (note LEFT JOIN COMMENT ON to_note_id=note_id)
+				LEFT JOIN reply ON to_com_id=com_id
+		WHERE note.`note_id`=#{noteId}
+	</select>
+
+</mapper>

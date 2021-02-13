@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezhao.mapper.MessageMapper">
+
+	<select id="findHistoryMsg" parameterType="java.util.Map" resultType="Message">
+		SELECT from_id,
+			   to_id,
+			   msg_content,
+			   msg_date 
+		FROM message 
+		WHERE from_id=#{fromId} AND to_id=#{toId} 
+		ORDER BY #{msgDate}
+	</select>
+	
+	<insert id="insertMsg" parameterType="Message">
+		INSERT INTO message(
+			from_id,
+			to_id,
+			msg_content,
+			msg_date
+			) VALUES (
+			#{fromId},
+			#{toId},
+			#{msgContent},
+			#{msgDate}
+			)
+	</insert>
+	
+</mapper>
