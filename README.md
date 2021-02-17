@@ -1,2 +1,2 @@
 # system
-EZhao、几个管理系统
+EZhao、几简单个管理系统
